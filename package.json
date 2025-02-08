@@ -10,9 +10,6 @@
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "tsc"
-  },
   "keywords": [
     "nestjs",
     "nestjs",
@@ -31,9 +28,15 @@
     "type": "git",
     "url": "https://github.com/abolfazlghaderi/notif-sender-nestjs"
   },
+  "scripts": {
+    "build": "tsc",
+    "lint:f": "eslint . --fix",
+    "lint:nf": "eslint . --no--fix"
+  },
   "dependencies": {
     "@nestjs/common": "^11.0.8",
-    "nodemailer": "^6.10.0"
+    "nodemailer": "^6.10.0",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

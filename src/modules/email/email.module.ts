@@ -1,6 +1,6 @@
+import { EmailService } from './email.service'
 import { DynamicModule, Module } from '@nestjs/common'
 import { EmailModuleOptions } from '../../interfaces/email.interface'
-import { EmailService } from './email.service'
 
 @Module({})
 export class EmailModule
