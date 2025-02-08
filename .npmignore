@@ -1,0 +1,12 @@
+.github
+.husky
+src
+./src
+test
+eslint.config.mjs
+.gitignore
+.npmrc
+.prettierrc
+nestjs-cli.json
+tsconfig.json
+tsconfig.tsbuildinfo

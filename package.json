@@ -1,6 +1,6 @@
 {
   "name": "notif-sender-nestjs",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -13,10 +13,24 @@
   "scripts": {
     "build": "tsc"
   },
-  "keywords": [],
+  "keywords": [
+    "nestjs",
+    "nestjs",
+    "notification",
+    "email",
+    "telegram",
+    "rxjs"
+  ],
   "author": "Abolfazl Ghaderi <abolfazlghaderi.ir>",
-  "license": "ISC",
-  "description": "",
+  "license": "MIT",
+  "description": "A NestJS module for sending notifications via Email and Telegram.",
+  "bugs": {
+    "url": "https://github.com/abolfazlghaderi/notif-sender-nestjs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abolfazlghaderi/notif-sender-nestjs"
+  },
   "dependencies": {
     "@nestjs/common": "^11.0.8",
     "nodemailer": "^6.10.0"
