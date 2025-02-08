@@ -1,7 +1,7 @@
 import * as nodemailer from 'nodemailer'
 import { TEmailContent, TEmailSenderConfig } from './types'
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { concatMap, delay, from, Subject, tap } from 'rxjs'
+import { catchError, concatMap, delay, EMPTY, from, Subject, tap } from 'rxjs'
 
 @Injectable()
 export class EmailSenderService
@@ -36,6 +36,14 @@ export class EmailSenderService
                             Logger.verbose(
                                 `<${emailId}> Email sent to: ${email.to}, Subject: ${email.subject}`,
                             )
+                        }),
+                        catchError((error) =>
+                        {
+                            Logger.error(
+                                `<${emailId}> Failed to send email to: ${email.to}, Error: ${error?.message || 'Unknown error'}`,
+                            )
+                            setTimeout(() => this.emailQueue.next(email), 3000)
+                            return EMPTY // don't stop the stream
                         }),
                     )
                 }), // Send each email after the previous one is finished
