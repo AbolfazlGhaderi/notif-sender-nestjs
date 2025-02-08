@@ -1,19 +1,17 @@
 import * as nodemailer from 'nodemailer'
-import { TEmailContent } from '../../types/email.content'
+import { TEmailContent, TEmailSenderConfig } from './types'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { concatMap, delay, from, Subject, tap } from 'rxjs'
-import { EmailModuleOptions } from '../../interfaces/email.interface'
 
 @Injectable()
-export class EmailService
+export class EmailSenderService
 {
-    private transporter: nodemailer.Transporter
+    private emailTransporter: nodemailer.Transporter
+    private emailQueue = new Subject<TEmailContent>()
 
-    private queue$ = new Subject<TEmailContent>()
-
-    constructor(@Inject('EMAIL_OPTIONS') private options: EmailModuleOptions)
+    constructor(private options: TEmailSenderConfig)
     {
-        this.transporter = nodemailer.createTransport({
+        this.emailTransporter = nodemailer.createTransport({
             host: this.options.host,
             port: this.options.port,
             secure: this.options.secure,
@@ -21,19 +19,23 @@ export class EmailService
             from: this.options.defualt?.from,
         })
 
-        this.queue$
+        this.emailQueue
             .pipe(
                 concatMap((email) =>
                 {
                     const emailId = Math.floor(Math.random() * 1e8)
                     // Log before sending email
-                    Logger.verbose(`<${emailId}> Sending email to: ${email.to}, Subject: ${email.subject}`)
+                    Logger.verbose(
+                        `<${emailId}> Sending email to: ${email.to}, Subject: ${email.subject}`,
+                    )
 
                     return from(this.sendEmail_now(email)).pipe(
                         tap(() =>
                         {
                             // Log after email is sent
-                            Logger.verbose(`<${emailId}> Email sent to: ${email.to}, Subject: ${email.subject}`)
+                            Logger.verbose(
+                                `<${emailId}> Email sent to: ${email.to}, Subject: ${email.subject}`,
+                            )
                         }),
                     )
                 }), // Send each email after the previous one is finished
@@ -44,17 +46,20 @@ export class EmailService
 
     async sendEmail_now(emailContent: TEmailContent)
     {
-        return this.transporter.sendMail({
-            from: this.options.defualt?.from || emailContent.from,
-            to: emailContent.to,
-            subject: emailContent.subject,
-            text: emailContent.body,
-            html: emailContent.body,
-        })
+        if (this.options.enable)
+        {
+            return this.emailTransporter.sendMail({
+                from: this.options.defualt?.from || emailContent.from,
+                to: emailContent.to,
+                subject: emailContent.subject,
+                text: emailContent.text,
+                html: emailContent.html,
+            })
+        }
     }
 
     sendEmail_addToQueue(emailContent: TEmailContent)
     {
-        this.queue$.next(emailContent)
+        this.emailQueue.next(emailContent)
     }
 }
