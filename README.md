@@ -132,3 +132,12 @@ export class AppService {
     } 
 }
 ```
+## 🚀 Feedback & Contact  
+
+Got any questions or suggestions? Feel free to reach out ❤️  
+
+📩 **Email:** [dev.ghaderi@gmail.com](mailto:dev.ghaderi@gmail.com)  
+💬 **Telegram:** [@Abolfazl_ghaderii](https://t.me/Abolfazl_ghaderii)  
+🌐 **Website:** [abolfazlghaderi.ir](https://abolfazlghaderi.ir)  
+
+Let's build something amazing together! ✨
