@@ -64,7 +64,7 @@ export class AppModule {}
 
 This service provides two methods for sending emails:
 
-📨 **sendEmail_now :** Sends an email immediately. Use this when you need to ensure the email is sent before continuing execution.
+📨 **sendEmail :** Sends an email immediately. Use this when you need to ensure the email is sent before continuing execution.
 
 📧 **sendEmail_addToQueue :** Queues the email for later sending. This is useful when you don't need an immediate response and just want the email to be processed asynchronously.
 
@@ -79,7 +79,7 @@ export class AppService {
 
     async getHello()
     {
-        await this.notifService.sendEmail_now({
+        await this.notifService.sendEmail({
             subject: 'Hello',
             text: 'Hello World!',
             to: 'dev.ghaderi@gmail.com',
@@ -90,6 +90,7 @@ export class AppService {
     }
 
     // OR
+
     getHello()
     {
         this.notifService.sendEmail_addToQueue({
