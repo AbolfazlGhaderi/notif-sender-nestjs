@@ -17,7 +17,7 @@ export class EmailSenderService
             port: this.options.port,
             secure: this.options.secure,
             auth: this.options.auth,
-            from: this.options.defualt?.from,
+            from: this.options.default?.from,
         })
 
         this.emailQueue
@@ -42,7 +42,7 @@ export class EmailSenderService
             try
             {
                 await this.emailTransporter.sendMail({
-                    from: this.options.defualt?.from || notifContent.from,
+                    from: this.options.default?.from || notifContent.from,
                     to: notifContent.to,
                     subject: notifContent.subject,
                     text: notifContent.text,

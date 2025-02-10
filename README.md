@@ -48,7 +48,7 @@ import { NotifSenderModule } from 'notif-sender-nestjs'
                     user: 'string',
                     pass: '******',
                 },
-                defualt: {
+                default: {
                     from: 'string', // optional
                 },
             },
@@ -70,14 +70,16 @@ export class AppModule {}
 This service provides four methods for sending notifications via Telegram or email:
 
 ### 📧 Email :
+
 💥 **sendNotifToEmail :**  Sends an email immediately. Use this when you need to ensure the email is sent before continuing execution.
 
 🗃️ **sendNotifToEmail_addToQueue :**  Queues the email for later sending. This is useful when you don't need an immediate response and just want the email to be processed asynchronously.
 
 ### 📨 Telegram :
+
 💥 **sendNotifToTelegram :** The `sendNotifToTelegram` method sends notifications directly to the chat ID configured during setup. However, you can also specify a different chat ID when calling this method.
 
-⚠ Important: Before sending a notification, the user must have already started a conversation with the bot; otherwise, the bot won't be able to send messages
+⚠️ Important: Before sending a notification, the user must have already started a conversation with the bot; otherwise, the bot won't be able to send messages
 
 🗃️ **sendNotifToTelegram_addToQueue :** This method works similarly to `sendNotifToTelegram`, but instead of sending the notification immediately, it adds it to a queue and sends it in order
 

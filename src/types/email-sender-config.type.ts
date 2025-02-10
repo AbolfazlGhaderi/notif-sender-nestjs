@@ -7,7 +7,7 @@ export type TEmailSenderConfig = {
         user: string
         pass: string
     }
-    defualt?: {
+    default?: {
         from?: string
     }
 }
