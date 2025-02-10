@@ -1,4 +1,5 @@
-export interface EmailModuleOptions {
+export type TEmailSenderConfig = {
+    enable: boolean
     host: string
     port: number
     secure: boolean
@@ -6,7 +7,7 @@ export interface EmailModuleOptions {
         user: string
         pass: string
     }
-    defualt?: {
+    default?: {
         from?: string
     }
 }

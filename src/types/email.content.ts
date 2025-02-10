@@ -1,6 +1,7 @@
 export type TEmailContent = {
     to: string
     subject: string
-    body: string
+    text: string
+    html?: string
     from?: string
 }

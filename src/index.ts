@@ -1,4 +1,4 @@
 export * from './types/email.content'
-export * from './interfaces/email.interface'
-export * from './modules/email/email.module'
-export * from './modules/email/email.service'
+export * from './notif-sender.module'
+export * from './notif-sender.service'
+export * from './types'
