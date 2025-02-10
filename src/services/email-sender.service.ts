@@ -2,6 +2,7 @@ import * as nodemailer from 'nodemailer'
 import { concatMap, delay, from, mergeMap, Subject } from 'rxjs'
 import { Injectable, Logger } from '@nestjs/common'
 import { TEmailContent, TEmailSenderConfig } from '../types'
+import { EServices } from '../enums/services.enum'
 
 @Injectable()
 export class EmailSenderService
@@ -21,40 +22,41 @@ export class EmailSenderService
 
         this.emailQueue
             .pipe(
-                mergeMap(async (email) => {
-                    const isSuccess = await this.sendEmail(email);
-                    if (!isSuccess) setTimeout(() => this.emailQueue.next(email), 5000);
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                mergeMap(async (notif) =>
+                {
+                    const isSuccess = await this.sendNotifToEmail(notif)
+                    if (!isSuccess) setTimeout(() => this.emailQueue.next(notif), 5000)
+                    await new Promise(resolve => setTimeout(resolve, 1000))
 
-                }, 2)
+                }, 2),
             )
             .subscribe()
     }
 
-    async sendEmail(emailContent: TEmailContent & { emailId: string })
+    async sendNotifToEmail(notifContent: TEmailContent & { emailId: string })
     {
         // Log before sending email
-        Logger.verbose(`<${emailContent.emailId}> Sending email to: ${emailContent.to}, Subject: ${emailContent.subject}`)
+        Logger.verbose(`<${notifContent.emailId}> Sending email to: ${notifContent.to}, Subject: ${notifContent.subject}`, EServices.EmailSenderService)
         if (this.options.enable)
         {
             try
             {
                 await this.emailTransporter.sendMail({
-                    from: this.options.defualt?.from || emailContent.from,
-                    to: emailContent.to,
-                    subject: emailContent.subject,
-                    text: emailContent.text,
-                    html: emailContent.html,
+                    from: this.options.defualt?.from || notifContent.from,
+                    to: notifContent.to,
+                    subject: notifContent.subject,
+                    text: notifContent.text,
+                    html: notifContent.html,
                 })
 
-                Logger.verbose(`<${emailContent.emailId}> Email sent successfully to: ${emailContent.to}`)
+                Logger.verbose(`<${notifContent.emailId}> Email sent successfully to: ${notifContent.to}`, EServices.EmailSenderService)
 
                 return true
             }
             catch (error)
             {
                 Logger.error(
-                    `<${emailContent.emailId}> Failed to send email to: ${emailContent.to}, Error: ${(error as any)?.message || 'Unknown error'}`,
+                    `<${notifContent.emailId}> Failed to send email to: ${notifContent.to}, Error: ${(error as any)?.message || 'Unknown error'}`, EServices.EmailSenderService,
                 )
                 return false
             }
@@ -62,14 +64,14 @@ export class EmailSenderService
         else
         {
             Logger.error(
-                `<${emailContent.emailId}> Error: Email sender is disabled`,
+                `<${notifContent.emailId}> Error: Email sender is disable`, EServices.EmailSenderService,
             )
             return false
         }
     }
 
-    sendEmail_addToQueue(emailContent: TEmailContent & { emailId: string })
+    sendNotifToEmail_addToQueue(notifContent: TEmailContent & { emailId: string })
     {
-        this.emailQueue.next(emailContent)
+        this.emailQueue.next(notifContent)
     }
 }
