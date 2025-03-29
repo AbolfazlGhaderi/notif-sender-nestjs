@@ -29,6 +29,7 @@
     "url": "https://github.com/abolfazlghaderi/notif-sender-nestjs"
   },
   "scripts": {
+    "release": "npm run build && release-it",
     "build": "tsc",
     "lint:f": "eslint . --fix",
     "lint:nf": "eslint . --no--fix"
@@ -49,6 +50,7 @@
     "eslint-plugin-security": "^3.0.1",
     "eslint-plugin-unicorn": "^56.0.1",
     "globals": "^15.14.0",
+    "release-it": "^18.1.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0"
