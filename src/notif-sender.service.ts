@@ -1,10 +1,9 @@
+import { Inject, Injectable } from '@nestjs/common'
 import { TEmailContent } from './types/email.content'
-
-import { Inject, Injectable, Logger } from '@nestjs/common'
-import { EmailSenderService } from './services/email-sender.service'
-import { INotifSenderOptions } from './interfaces/notif-sender-module-options'
 import { TTelegramContent } from './types/telegram-content'
+import { EmailSenderService } from './services/email-sender.service'
 import { TelegramSenderService } from './services/telegram-sender.service'
+import { INotifSenderOptions } from './interfaces/notif-sender-module-options'
 
 @Injectable()
 export class NotifSenderService
