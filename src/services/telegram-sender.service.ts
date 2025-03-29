@@ -1,9 +1,8 @@
-import * as nodemailer from 'nodemailer'
-import { concatMap, delay, from, mergeMap, Subject } from 'rxjs'
-import { Injectable, Logger } from '@nestjs/common'
-import { TEmailContent, TEmailSenderConfig, TTelegramSenderConfig } from '../types'
-import { TTelegramContent } from '../types/telegram-content'
+import { mergeMap, Subject } from 'rxjs'
+import { TTelegramSenderConfig } from '../types'
 import { EServices } from '../enums/services.enum'
+import { Injectable, Logger } from '@nestjs/common'
+import { TTelegramContent } from '../types/telegram-content'
 
 @Injectable()
 export class TelegramSenderService
@@ -11,6 +10,7 @@ export class TelegramSenderService
     private chatId: string
     private botToken: string
     private messageQueue = new Subject<TTelegramContent & { messageId: string }>()
+    private logger = new Logger(EServices.TelegramSenderService)
 
     constructor(private options: TTelegramSenderConfig)
     {
@@ -24,7 +24,7 @@ export class TelegramSenderService
                     const isSuccess = await this.sendNotifToTelegram(notif)
                     if (!isSuccess) setTimeout(() => this.messageQueue.next(notif), 5000)
                     await new Promise((resolve) => setTimeout(resolve, 1000))
-                }, 2),
+                }, this.options.maxConcurrentRequests || 2),
             )
             .subscribe()
     }
@@ -38,7 +38,8 @@ export class TelegramSenderService
     {
         const chatId = notifContent.chatId ?? this.options.chatId
         const messageId = notifContent.messageId
-        Logger.verbose(`<${ messageId }> Sending message in telegram | ChatId: ${ chatId }`, EServices.TelegramSenderService)
+
+        this.logger.verbose(`<${ messageId }> Sending message in telegram | ChatId: ${ chatId }`)
         if (this.options.enable)
         {
             try
@@ -57,24 +58,20 @@ export class TelegramSenderService
                 {
                     throw new Error(`${ result?.description || 'Unknown error' } | ErrorCode: ${ result?.error_code || 'Unknown code' }`)
                 }
-                Logger.verbose(
-                    `<${ messageId }> Message sent successfully to telegram | ChatId: ${ chatId }`,
-                    EServices.TelegramSenderService,
-                )
+                this.logger.verbose(
+                    `<${ messageId }> Message sent successfully to telegram | ChatId: ${ chatId }`)
                 return true
             }
             catch (error)
             {
-                Logger.error(
-                    `<${ messageId }> Message failed to send to Telegram | ChatId: ${ chatId } Error: ${ (error as any)?.message || 'Unknown error' }`,
-                    EServices.TelegramSenderService,
-                )
+                this.logger.error(
+                    `<${ messageId }> Message failed to send to Telegram | ChatId: ${ chatId } Error: ${ (error as any)?.message || 'Unknown error' }`)
                 return false
             }
         }
         else
         {
-            Logger.error(`<${ messageId }> Error: Telegram sender is disable`, EServices.TelegramSenderService)
+            this.logger.error(`<${ messageId }> Error: Telegram sender is disable`)
             return false
         }
     }

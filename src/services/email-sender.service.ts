@@ -1,14 +1,15 @@
 import * as nodemailer from 'nodemailer'
-import { concatMap, delay, from, mergeMap, Subject } from 'rxjs'
+import { mergeMap, Subject } from 'rxjs'
+import { EServices } from '../enums/services.enum'
 import { Injectable, Logger } from '@nestjs/common'
 import { TEmailContent, TEmailSenderConfig } from '../types'
-import { EServices } from '../enums/services.enum'
 
 @Injectable()
 export class EmailSenderService
 {
     private emailTransporter: nodemailer.Transporter
     private emailQueue = new Subject<TEmailContent & { emailId: string }>()
+    private logger = new Logger(EServices.EmailSenderService)
 
     constructor(private options: TEmailSenderConfig)
     {
@@ -28,7 +29,7 @@ export class EmailSenderService
                     if (!isSuccess) setTimeout(() => this.emailQueue.next(notif), 5000)
                     await new Promise(resolve => setTimeout(resolve, 1000))
 
-                }, 2),
+                }, this.options.maxConcurrentRequests || 2),
             )
             .subscribe()
     }
@@ -36,7 +37,7 @@ export class EmailSenderService
     async sendNotifToEmail(notifContent: TEmailContent & { emailId: string })
     {
         // Log before sending email
-        Logger.verbose(`<${notifContent.emailId}> Sending email to: ${notifContent.to}, Subject: ${notifContent.subject}`, EServices.EmailSenderService)
+        this.logger.verbose(`<${notifContent.emailId}> Sending email to: ${notifContent.to}, Subject: ${notifContent.subject}`)
         if (this.options.enable)
         {
             try
@@ -49,22 +50,22 @@ export class EmailSenderService
                     html: notifContent.html,
                 })
 
-                Logger.verbose(`<${notifContent.emailId}> Email sent successfully to: ${notifContent.to}`, EServices.EmailSenderService)
+                this.logger.verbose(`<${notifContent.emailId}> Email sent successfully to: ${notifContent.to}`)
 
                 return true
             }
             catch (error)
             {
-                Logger.error(
-                    `<${notifContent.emailId}> Failed to send email to: ${notifContent.to}, Error: ${(error as any)?.message || 'Unknown error'}`, EServices.EmailSenderService,
+                this.logger.error(
+                    `<${notifContent.emailId}> Failed to send email to: ${notifContent.to}, Error: ${(error as any)?.message || 'Unknown error'}`,
                 )
                 return false
             }
         }
         else
         {
-            Logger.error(
-                `<${notifContent.emailId}> Error: Email sender is disable`, EServices.EmailSenderService,
+            this.logger.error(
+                `<${notifContent.emailId}> Error: Email sender is disable`,
             )
             return false
         }
