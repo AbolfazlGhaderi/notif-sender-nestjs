@@ -105,14 +105,15 @@ export class AppService {
             subject: 'Hello',
             text: 'Hello World!',
             to: 'dev.ghaderi@gmail.com',
-            html: '<p>Hello World!</p>'
+            html: '<p>Hello World!</p>',
+            from: 'Abolfazl Ghaderi <abolfazlghaderi.ir>' // Optional - higher priority
         })
 
         // OR
 
         await this.notifService.sendNotifToTelegram({
             text: 'Hi mr.Brian',
-            chatId: 'string', // Optional
+            chatId: 'string', // Optional - higher priority
         })
         return 'Hello World!'
     }
@@ -125,14 +126,15 @@ export class AppService {
             subject: 'Hello',
             text: 'Hello World!',
             to: 'dev.ghaderi@gmail.com',
-            html: '<p>Hello World!</p>'
+            html: '<p>Hello World!</p>',
+            from: 'Abolfazl Ghaderi <abolfazlghaderi.ir>' // Optional - higher priority
         })
 
         // OR
 
         this.notifService.sendNotifToTelegram_addToQueue({
             text: 'Hi mr.Brian',
-            chatId: 'string', // Optional
+            chatId: 'string', // Optional - higher priority
         })
         return 'Hello World!'
     } 
@@ -142,8 +144,8 @@ export class AppService {
 
 Got any questions or suggestions? Feel free to reach out ❤️  
 
+🌐 **Website:** [abolfazlghaderi.ir](https://abolfazlghaderi.ir)  
 📩 **Email:** [dev.ghaderi@gmail.com](mailto:dev.ghaderi@gmail.com)  
 💬 **Telegram:** [@Abolfazl_ghaderii](https://t.me/Abolfazl_ghaderii)  
-🌐 **Website:** [abolfazlghaderi.ir](https://abolfazlghaderi.ir)  
 
 Let's build something amazing together! ✨

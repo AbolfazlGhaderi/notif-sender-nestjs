@@ -46,7 +46,7 @@ export class EmailSenderService
             try
             {
                 await this.emailTransporter.sendMail({
-                    from: this.options.default?.from || notifContent.from,
+                    from: notifContent.from || this.options.default?.from,
                     to: notifContent.to,
                     subject: notifContent.subject,
                     text: notifContent.text,
