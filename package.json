@@ -31,8 +31,8 @@
   "scripts": {
     "release": "npm run build && release-it",
     "build": "tsc",
-    "lint:f": "eslint . --fix",
-    "lint:nf": "eslint . --no--fix"
+    "lint:fix": "eslint . --fix",
+    "lint:nfix": "eslint . --no--fix"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.8",
