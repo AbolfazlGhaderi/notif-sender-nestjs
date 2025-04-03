@@ -87,6 +87,8 @@ This service provides four methods for sending notifications via Telegram or ema
 
 ⚠️ Important: Before sending a notification, the user must have already started a conversation with the bot; otherwise, the bot won't be able to send messages
 
+⚠️ To send a message in a group or channel, the bot must be an admin!
+
 🗃️ **sendNotifToTelegram_addToQueue :** This method works similarly to `sendNotifToTelegram`, but instead of sending the notification immediately, it adds it to a queue and sends it in order
 
 
@@ -101,6 +103,7 @@ export class AppService {
 
     async getHello()
     {
+        // Send to email
         await this.notifService.sendNotifToEmail({
             subject: 'Hello',
             text: 'Hello World!',
@@ -109,12 +112,12 @@ export class AppService {
             from: 'Abolfazl Ghaderi <abolfazlghaderi.ir>' // Optional - higher priority
         })
 
-        // OR
-
+        // Send to telegram
         await this.notifService.sendNotifToTelegram({
             text: 'Hi mr.Brian',
             chatId: 'string', // Optional - higher priority
         })
+
         return 'Hello World!'
     }
 
@@ -122,6 +125,7 @@ export class AppService {
 
     getHello()
     {
+        // Send to email
         this.notifService.sendNotifToEmail_addToQueue({
             subject: 'Hello',
             text: 'Hello World!',
@@ -130,12 +134,12 @@ export class AppService {
             from: 'Abolfazl Ghaderi <abolfazlghaderi.ir>' // Optional - higher priority
         })
 
-        // OR
-
+        // Send to telegram
         this.notifService.sendNotifToTelegram_addToQueue({
             text: 'Hi mr.Brian',
             chatId: 'string', // Optional - higher priority
         })
+
         return 'Hello World!'
     } 
 }
