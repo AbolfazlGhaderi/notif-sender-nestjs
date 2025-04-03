@@ -1,8 +1,8 @@
 import { mergeMap, Subject } from 'rxjs'
-import { TTelegramSenderConfig } from '../types'
+import { Injectable } from '@nestjs/common'
+import { LoggerService } from './logger.service'
 import { EServices } from '../enums/services.enum'
-import { Injectable, Logger } from '@nestjs/common'
-import { TTelegramContent } from '../types/telegram-content'
+import { LoggingConfigInOption, TTelegramContent, TTelegramSenderConfig } from '../type'
 
 @Injectable()
 export class TelegramSenderService
@@ -10,9 +10,12 @@ export class TelegramSenderService
     private chatId: string
     private botToken: string
     private messageQueue = new Subject<TTelegramContent & { messageId: string }>()
-    private logger = new Logger(EServices.TelegramSenderService)
+    private logger = new LoggerService({
+        enable: this.options.logging.enable,
+        context: EServices.TelegramSenderService,
+    })
 
-    constructor(private options: TTelegramSenderConfig)
+    constructor(private options: TTelegramSenderConfig & LoggingConfigInOption)
     {
         this.chatId = this.options.chatId
         this.botToken = this.options.botToken

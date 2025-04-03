@@ -8,6 +8,7 @@ Notif-Sender-NestJS is a notification service built for NestJS applications. It 
 - ✅ Send **Telegram** messages to a bot
 - ✅ Built-in **queue management** using `RxJS`
 - ✅ Designed for scalability and easy integration into NestJS projects
+- ✅ Limit the maximum number of concurrent requests for sending notifications
 
 ## Queue Management with RxJS
 
@@ -51,11 +52,16 @@ import { NotifSenderModule } from 'notif-sender-nestjs'
                 default: {
                     from: 'string', // optional
                 },
+                maxConcurrentRequests: number // default is 2
             },
             telegramSenderConfig: {
                 enable: boolean,
                 botToken: 'string',
                 chatId: 'string',
+                maxConcurrentRequests: number // default is 2
+            },
+            logging: {
+                enable: true // default is true!
             }
         }),
     ],

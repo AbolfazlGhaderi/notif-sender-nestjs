@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { TEmailContent } from './types/email.content'
-import { TTelegramContent } from './types/telegram-content'
+import { TEmailContent, TTelegramContent } from './type'
 import { EmailSenderService } from './services/email-sender.service'
 import { TelegramSenderService } from './services/telegram-sender.service'
 import { INotifSenderOptions } from './interfaces/notif-sender-module-options'
@@ -15,11 +14,21 @@ export class NotifSenderService
     {
         if (this.options.emailSenderConfig)
         {
-            this.emailSenderService = new EmailSenderService(this.options.emailSenderConfig)
+            this.emailSenderService = new EmailSenderService({
+                ...this.options.emailSenderConfig,
+                logging: {
+                    enable: this.options.logging?.enable ?? true, // defualt is true
+                },
+            })
         }
         if (this.options.telegramSenderConfig)
         {
-            this.telegramSenderService = new TelegramSenderService(this.options.telegramSenderConfig)
+            this.telegramSenderService = new TelegramSenderService({
+                ...this.options.telegramSenderConfig,
+                logging: {
+                    enable: this.options.logging?.enable ?? true, // defualt is true
+                },
+            })
         }
     }
 

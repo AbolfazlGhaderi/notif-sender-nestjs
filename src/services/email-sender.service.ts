@@ -1,17 +1,21 @@
 import * as nodemailer from 'nodemailer'
 import { mergeMap, Subject } from 'rxjs'
+import { Injectable } from '@nestjs/common'
+import { LoggerService } from './logger.service'
 import { EServices } from '../enums/services.enum'
-import { Injectable, Logger } from '@nestjs/common'
-import { TEmailContent, TEmailSenderConfig } from '../types'
+import { LoggingConfigInOption, TEmailContent, TEmailSenderConfig } from '../type'
 
 @Injectable()
 export class EmailSenderService
 {
     private emailTransporter: nodemailer.Transporter
     private emailQueue = new Subject<TEmailContent & { emailId: string }>()
-    private logger = new Logger(EServices.EmailSenderService)
+    private logger = new LoggerService({
+        enable: this.options.logging.enable,
+        context: EServices.EmailSenderService,
+    })
 
-    constructor(private options: TEmailSenderConfig)
+    constructor(private options: TEmailSenderConfig & LoggingConfigInOption )
     {
         this.emailTransporter = nodemailer.createTransport({
             host: this.options.host,
@@ -36,7 +40,6 @@ export class EmailSenderService
 
     async sendNotifToEmail(notifContent: TEmailContent & { emailId: string })
     {
-        // Log before sending email
         this.logger.verbose(`<${notifContent.emailId}> Sending email to: ${notifContent.to}, Subject: ${notifContent.subject}`)
         if (this.options.enable)
         {

@@ -29,7 +29,10 @@ export class NotifSenderModule
                 enable: true,
                 botToken: 'TOKEN',
                 chatId: 'ID',
-                maxConcurrentRequests: 1
+                maxConcurrentRequests: 2
+            },
+            logging: {
+                enable: true,
             }
         }
      */

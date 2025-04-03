@@ -1,7 +1,7 @@
-import { TEmailSenderConfig } from '../types/email-sender-config.type'
-import { TTelegramSenderConfig } from '../types/telegram-sender-config.type'
+import { TEmailSenderConfig, TLoggingConfig, TTelegramSenderConfig } from '../type'
 
 export interface INotifSenderOptions {
     emailSenderConfig?: TEmailSenderConfig
     telegramSenderConfig?: TTelegramSenderConfig
+    logging?: TLoggingConfig
 }
